@@ -1,5 +1,9 @@
 package ru.ifmo.collections;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Collections;
+
 /**
  * Design a class to find the kth largest element in a stream. k is from 1 to numbers.length.
  * Note that it is the kth largest element in the sorted order, not the kth distinct element.
@@ -8,11 +12,18 @@ package ru.ifmo.collections;
  * For each call to the method KthLargest.add(), return the element representing the kth largest element in the stream.
  */
 public class KthLargest {
+    private List<Integer> elements = new LinkedList<>();
+    private int k;
     public KthLargest(int k, int[] numbers) {
-        // TODO implement
+        for (int i: numbers) {
+            elements.add(i);
+        }
+        this.k = k;
     }
 
     public int add(int val) {
-        throw new UnsupportedOperationException(); // TODO implement
+        elements.add(val);
+        elements.sort(Collections.reverseOrder());
+        return elements.get(k - 1);
     }
 }
