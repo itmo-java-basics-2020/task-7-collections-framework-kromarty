@@ -2,6 +2,7 @@ package ru.ifmo.collections;
 
 import java.util.AbstractSet;
 import java.util.Comparator;
+import java.util.*;
 
 /**
  * Represents sorted set of unique values.
@@ -16,21 +17,68 @@ import java.util.Comparator;
  *
  * @param <T> set contents type
  */
-public abstract class SortedSet<T> extends AbstractSet<T> {
-    // private final Map<???, ???> contents; TODO decide Map implementation and key/value types. "???" is used just as an example
+public class SortedSet<T> extends AbstractSet<T> {
+    private final Map<T, Integer> elements;
+
+    private SortedSet(TreeMap<T, Integer> tm) {
+        elements = tm;
+    }
+
     public static <T> SortedSet<T> create() {
-        throw new UnsupportedOperationException(); // TODO implement
+        return new SortedSet<>(new TreeMap<>());
     }
 
     public static <T> SortedSet<T> from(Comparator<T> comparator) {
-        throw new UnsupportedOperationException(); // TODO implement
+        return new SortedSet<>(new TreeMap<>(comparator));
     }
 
-    public T[] getSorted() {
-        throw new UnsupportedOperationException(); // TODO implement
+    public List<T> getSorted() {
+        return new ArrayList<>(elements.keySet());
     }
 
-    public T[] getReversed() {
-        throw new UnsupportedOperationException(); // TODO implement
+    public List<T> getReversed() {
+        List<T> list = getSorted();
+        Collections.reverse(list);
+        return list;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return elements.keySet().iterator();
+    }
+
+    @Override
+    public boolean add(T t) {
+        int temp = elements.size();
+        elements.put(t, 1);
+        return temp != elements.size();
+    }
+
+    @Override
+    public boolean addAll(Collection<? extends T> collection) {
+        int temp = elements.size();
+        for (T i : collection) {
+            this.add(i);
+        }
+        return temp != elements.size();
+    }
+
+    @Override
+    public boolean remove(Object object) {
+        return elements.remove(object, 1);
+    }
+
+    @Override
+    public boolean removeAll(Collection<?> collection) {
+        int temp = elements.size();
+        for (Object object : collection) {
+            this.remove(object);
+        }
+        return temp != elements.size();
+    }
+
+    @Override
+    public int size() {
+        return elements.size();
     }
 }
